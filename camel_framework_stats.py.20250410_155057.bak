@@ -1,0 +1,15 @@
+import matplotlib.pyplot as plt
+
+# Placeholder values - replace with actual numbers if available
+stars = 1000  # Replace with actual star count
+forks = 200   # Replace with actual fork count
+open_issues = 10 # Replace with actual open issues count
+contributors = 50 # Replace with actual contributor count
+
+labels = ['Stars', 'Forks', 'Open Issues', 'Contributors']
+values = [stars, forks, open_issues, contributors]
+
+plt.bar(labels, values, color=['blue', 'green', 'red', 'purple'])
+plt.ylabel('Count')
+plt.title('Camel Framework GitHub Statistics')
+plt.show()

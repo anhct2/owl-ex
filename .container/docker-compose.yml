@@ -20,7 +20,7 @@ services:
       - ~/.cache/pip:/root/.pip/cache
       - ~/.cache/playwright:/root/.cache/ms-playwright
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_KEY=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
       - DISPLAY=:99
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1

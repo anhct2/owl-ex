@@ -27,6 +27,7 @@ from camel.types import ModelPlatformType, ModelType
 from camel.logger import set_log_level
 from camel.societies import RolePlaying
 
+from owl.models import RateLimitedModelFactory
 from owl.utils import run_society, DocumentProcessingToolkit
 
 base_dir = pathlib.Path(__file__).parent.parent
@@ -46,41 +47,42 @@ def construct_society(question: str) -> RolePlaying:
         RolePlaying: A configured society of agents ready to address the question.
     """
 
-    # Create models for different components
+    # Create models for different components using our rate-limited factory
+    # This ensures we don't exceed Gemini's 30 RPM limit
     models = {
-        "user": ModelFactory.create(
+        "user": RateLimitedModelFactory.create(
             model_platform=ModelPlatformType.GEMINI,
-            model_type=ModelType.GEMINI_2_5_PRO_EXP,
+            model_type=ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW,
             model_config_dict={"temperature": 0},
         ),
-        "assistant": ModelFactory.create(
+        "assistant": RateLimitedModelFactory.create(
             model_platform=ModelPlatformType.GEMINI,
-            model_type=ModelType.GEMINI_2_5_PRO_EXP,
+            model_type=ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW,
             model_config_dict={"temperature": 0},
         ),
-        "browsing": ModelFactory.create(
+        "browsing": RateLimitedModelFactory.create(
             model_platform=ModelPlatformType.GEMINI,
-            model_type=ModelType.GEMINI_2_5_PRO_EXP,
+            model_type=ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW,
             model_config_dict={"temperature": 0},
         ),
-        "planning": ModelFactory.create(
+        "planning": RateLimitedModelFactory.create(
             model_platform=ModelPlatformType.GEMINI,
-            model_type=ModelType.GEMINI_2_5_PRO_EXP,
+            model_type=ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW,
             model_config_dict={"temperature": 0},
         ),
-        "video": ModelFactory.create(
+        "video": RateLimitedModelFactory.create(
             model_platform=ModelPlatformType.GEMINI,
-            model_type=ModelType.GEMINI_2_5_PRO_EXP,
+            model_type=ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW,
             model_config_dict={"temperature": 0},
         ),
-        "image": ModelFactory.create(
+        "image": RateLimitedModelFactory.create(
             model_platform=ModelPlatformType.GEMINI,
-            model_type=ModelType.GEMINI_2_5_PRO_EXP,
+            model_type=ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW,
             model_config_dict={"temperature": 0},
         ),
-        "document": ModelFactory.create(
+        "document": RateLimitedModelFactory.create(
             model_platform=ModelPlatformType.GEMINI,
-            model_type=ModelType.GEMINI_2_5_PRO_EXP,
+            model_type=ModelType.GEMINI_2_0_FLASH_LITE_PREVIEW,
             model_config_dict={"temperature": 0},
         ),
     }

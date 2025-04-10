@@ -1077,7 +1077,7 @@ def create_ui():
             """)
 
         with gr.Row():
-            with gr.Column(scale=0.5):
+            with gr.Column(scale=1):
                 question_input = gr.Textbox(
                     lines=5,
                     placeholder="Please enter your question...",
@@ -1138,7 +1138,7 @@ def create_ui():
             with gr.Tabs():  # Set conversation record as the default selected tab
                 with gr.TabItem("Conversation Record"):
                     # Add conversation record display area
-                    with gr.Box():
+                    with gr.Group():
                         log_display2 = gr.Markdown(
                             value="No conversation records yet.",
                             elem_classes="log-display",
@@ -1154,7 +1154,7 @@ def create_ui():
                         )
 
                 with gr.TabItem("Environment Variable Management", id="env-settings"):
-                    with gr.Box(elem_classes="env-manager-container"):
+                    with gr.Group(elem_classes="env-manager-container"):
                         gr.Markdown("""
                             ## Environment Variable Management
                             
@@ -1165,7 +1165,7 @@ def create_ui():
                         with gr.Row():
                             # Left column: Environment variable management controls
                             with gr.Column(scale=3):
-                                with gr.Box(elem_classes="env-controls"):
+                                with gr.Group(elem_classes="env-controls"):
                                     # Environment variable table - set to interactive for direct editing
                                     gr.Markdown("""
                                     <div style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 10px; margin: 15px 0; border-radius: 4px;">
@@ -1295,7 +1295,7 @@ def main():
         app = create_ui()
 
         app.queue()
-        app.launch(share=False, favicon_path="../assets/owl-favicon.ico")
+        app.launch(share=False, favicon_path="../assets/owl-favicon.ico", server_name="0.0.0.0", server_port=7860)
     except Exception as e:
         logging.error(f"Error occurred while starting the application: {str(e)}")
         print(f"Error occurred while starting the application: {str(e)}")
