@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  owl-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: owl-api:latest
+    container_name: owl-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./owl:/app/owl
+      - ./examples:/app/examples
+      - ~/.cache/pip:/root/.pip/cache
+      - ~/.cache/playwright:/root/.cache/ms-playwright
+    environment:
+      - PYTHONPATH=/app
+      - DISPLAY=:99
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - TERM=xterm-256color
+    shm_size: 2gb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+# Define persistent volumes for caching
+volumes:
+  playwright-cache:
+  pip-cache: 

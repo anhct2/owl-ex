@@ -114,7 +114,28 @@ def validate_input(question: str) -> bool:
 # Simple function to directly query Gemini for text-only prompts
 def direct_gemini_query(prompt: str):
     """Query Gemini directly for simple text-only prompts"""
-    if not GEMINI_API_KEY:
+    global genai
+    
+    # Check if genai is available
+    if 'genai' not in globals():
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+            import google.generativeai as genai
+            
+            api_key = os.getenv("GEMINI_API_KEY")
+            if not api_key:
+                return None, "GEMINI_API_KEY not configured in environment variables"
+            
+            genai.configure(api_key=api_key)
+            logger.info("Successfully configured Gemini API for direct calls within function")
+        except ImportError as e:
+            logger.error(f"Could not import Google Generative AI: {e}")
+            return None, f"Could not import Google Generative AI: {e}"
+    
+    # API key might be set, but we should check again to be safe
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
         return None, "GEMINI_API_KEY not configured in environment variables"
     
     try:
