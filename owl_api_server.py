@@ -61,8 +61,8 @@ try:
     load_dotenv()
     import google.generativeai as genai
     
-    # Hardcoded key for testing (from the .env file)
-    GEMINI_API_KEY = "AIzaSyBj94WPeYpo_0pqR-kXvhvLSLjxRr8dZQU"
+    # Get API key from environment variables
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     
     if GEMINI_API_KEY:
         genai.configure(api_key=GEMINI_API_KEY)
