@@ -66,13 +66,25 @@ def construct_society(question: str) -> RolePlaying:
         ),
     }
 
+    # # Configure toolkits
+    # tools = [
+    #     *CodeExecutionToolkit(sandbox="subprocess", verbose=True).get_tools(),
+    #     SearchToolkit().search_duckduckgo,
+    #     SearchToolkit().search_wiki,
+    #     SearchToolkit().search_baidu,
+    #     *ExcelToolkit().get_tools(),
+    #     *FileWriteToolkit(output_dir="./").get_tools(),
+    # ]
+
     # Configure toolkits
     tools = [
         *CodeExecutionToolkit(sandbox="subprocess", verbose=True).get_tools(),
+        # *ImageAnalysisToolkit(model=models["image"]).get_tools(),
         SearchToolkit().search_duckduckgo,
+        SearchToolkit().search_google,  # Comment this out if you don't have google search
         SearchToolkit().search_wiki,
-        SearchToolkit().search_baidu,
         *ExcelToolkit().get_tools(),
+        # *DocumentProcessingToolkit(model=models["document"]).get_tools(),
         *FileWriteToolkit(output_dir="./").get_tools(),
     ]
 
@@ -93,7 +105,7 @@ def construct_society(question: str) -> RolePlaying:
         user_agent_kwargs=user_agent_kwargs,
         assistant_role_name="assistant",
         assistant_agent_kwargs=assistant_agent_kwargs,
-        output_language="Chinese",
+        # output_language="Chinese",
     )
 
     return society

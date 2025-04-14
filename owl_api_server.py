@@ -23,6 +23,7 @@ import uvicorn
 import logging
 import importlib
 from typing import Dict, Any, Optional, List, Generator, AsyncGenerator
+from fastapi.middleware.cors import CORSMiddleware
 
 # Thiết lập logging
 logging.basicConfig(level=logging.INFO, 
@@ -38,6 +39,7 @@ MODULE_DESCRIPTIONS = {
     "run": "Default mode: Using OpenAI model's default agent collaboration mode, suitable for most tasks.",
     "run_mini": "Using OpenAI model with minimal configuration to process tasks",
     "run_gemini": "Using Gemini model to process tasks",
+    "run_deepseek": "Using DeepSeek model to process tasks in English",
     "run_deepseek_zh": "Using deepseek model to process Chinese tasks",
     "run_openai_compatible_model": "Using openai compatible model to process tasks",
     "run_ollama": "Using local ollama model to process tasks",
@@ -78,6 +80,15 @@ app = FastAPI(
     title="Owl API",
     description="API service for Owl multi-agent framework",
     version="1.0.0"
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 # Lưu trữ các task đang chạy và logs của chúng
