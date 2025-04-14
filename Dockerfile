@@ -34,8 +34,10 @@ COPY .env .
 COPY owl_api_server.py .
 
 # Install owl package in development mode and all dependencies
-RUN pip install --no-cache-dir -e .
-RUN pip install --no-cache-dir python-dotenv fastapi uvicorn sse-starlette google-generativeai
+# RUN pip install --no-cache-dir -e .
+# RUN pip install --no-cache-dir python-dotenv fastapi uvicorn sse-starlette google-generativeai
+RUN pip install -e .
+RUN pip install python-dotenv fastapi uvicorn sse-starlette google-generativeai
 
 # Install playwright and browsers
 RUN pip install playwright

@@ -21,10 +21,11 @@ import logging
 import datetime
 from typing import Tuple
 import importlib
-from dotenv import load_dotenv, set_key, find_dotenv, unset_key
+from dotenv import load_dotenv, set_key, unset_key
 import threading
 import queue
 import re
+import pathlib
 
 os.environ["PYTHONIOENCODING"] = "utf-8"
 
@@ -332,8 +333,17 @@ def run_owl(question: str, example_module: str) -> Tuple[str, str, str]:
         )
 
     try:
-        # Ensure environment variables are loaded
-        load_dotenv(find_dotenv(), override=True)
+        # Ensure environment variables are loaded from the correct .env file
+        base_dir = pathlib.Path(__file__).parent.parent
+        env_path = base_dir / "owl" / ".env"
+        load_dotenv(dotenv_path=str(env_path), override=True)
+        logging.info(f"Reloaded environment variables from: {env_path} for running module")
+        
+        # Log important API keys for debugging
+        gemini_api_key = os.environ.get('GEMINI_API_KEY', 'Not set')
+        masked_key = gemini_api_key[:4] + '*' * (len(gemini_api_key) - 8) + gemini_api_key[-4:] if len(gemini_api_key) > 8 else "Invalid key format"
+        logging.info(f"GEMINI_API_KEY status: {'Valid' if gemini_api_key and gemini_api_key != 'Not set' and 'your_api_key' not in gemini_api_key else 'Invalid/Empty'} (masked: {masked_key})")
+        
         logging.info(
             f"Processing question: '{question}', using module: {example_module}"
         )
@@ -442,12 +452,15 @@ WEB_FRONTEND_ENV_VARS: dict[str, str] = {}
 
 def init_env_file():
     """Initialize .env file if it doesn't exist"""
-    dotenv_path = find_dotenv()
-    if not dotenv_path:
-        with open(".env", "w") as f:
+    base_dir = pathlib.Path(__file__).parent
+    dotenv_path = base_dir / ".env"
+    
+    if not os.path.exists(dotenv_path):
+        with open(dotenv_path, "w") as f:
             f.write(DEFAULT_ENV_TEMPLATE)
-        dotenv_path = find_dotenv()
-    return dotenv_path
+        logging.info(f"Created new .env file at: {dotenv_path}")
+    
+    return str(dotenv_path)
 
 
 def load_env_vars():
@@ -1283,6 +1296,17 @@ def main():
         LOG_FILE = setup_logging()
         logging.info("OWL Web application started")
 
+        # Ensure using the correct .env file
+        base_dir = pathlib.Path(__file__).parent.parent
+        env_path = base_dir / "owl" / ".env"
+        load_dotenv(dotenv_path=str(env_path), override=True)
+        logging.info(f"Loaded environment variables from: {env_path}")
+        
+        # Log important API keys for debugging
+        gemini_api_key = os.environ.get('GEMINI_API_KEY', 'Not set')
+        masked_key = gemini_api_key[:4] + '*' * (len(gemini_api_key) - 8) + gemini_api_key[-4:] if len(gemini_api_key) > 8 else "Invalid key format"
+        logging.info(f"GEMINI_API_KEY status: {'Valid' if gemini_api_key and gemini_api_key != 'Not set' and 'your_api_key' not in gemini_api_key else 'Invalid/Empty'} (masked: {masked_key})")
+
         # Start log reading thread
         log_thread = threading.Thread(
             target=log_reader_thread, args=(LOG_FILE,), daemon=True
@@ -1295,7 +1319,14 @@ def main():
         app = create_ui()
 
         app.queue()
-        app.launch(share=False, favicon_path="../assets/owl-favicon.ico", server_name="0.0.0.0", server_port=7860)
+        
+        # Check if favicon exists, if not set to None
+        favicon_path = os.path.join(base_dir, "assets", "owl-favicon.ico")
+        if not os.path.exists(favicon_path):
+            logging.warning(f"Favicon not found at {favicon_path}, setting to None")
+            favicon_path = None
+            
+        app.launch(share=False, favicon_path=favicon_path, server_name="0.0.0.0", server_port=7860)
     except Exception as e:
         logging.error(f"Error occurred while starting the application: {str(e)}")
         print(f"Error occurred while starting the application: {str(e)}")
