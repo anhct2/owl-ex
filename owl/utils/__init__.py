@@ -11,7 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ========= Copyright 2023-2024 @ CAMEL-AI.org. All Rights Reserved. =========
-
 from .common import extract_pattern
 from .enhanced_role_playing import (
     OwlRolePlaying,
@@ -21,6 +20,25 @@ from .enhanced_role_playing import (
 )
 from .gaia import GAIABenchmark
 from .document_toolkit import DocumentProcessingToolkit
+from .progress_tracking import (
+    ScriptStep,
+    Script,
+    ScriptStorage,
+    ScriptGenerator,
+    ProgressTracker,
+    ScriptManager,
+)
+from .script_automation import (
+    ScriptAutomation,
+    EnhancedOwlRolePlaying,
+    enhanced_run_society,
+    enhanced_arun_society,
+)
+from .sandbox import (
+    SandboxEnvironment,
+    SandboxManager,
+    SandboxToolkit,
+)
 
 __all__ = [
     "extract_pattern",
@@ -30,4 +48,17 @@ __all__ = [
     "arun_society",
     "GAIABenchmark",
     "DocumentProcessingToolkit",
+    "ScriptStep",
+    "Script",
+    "ScriptStorage",
+    "ScriptGenerator",
+    "ProgressTracker",
+    "ScriptManager",
+    "ScriptAutomation",
+    "EnhancedOwlRolePlaying",
+    "enhanced_run_society",
+    "enhanced_arun_society",
+    "SandboxEnvironment",
+    "SandboxManager",
+    "SandboxToolkit",
 ]
